@@ -12,9 +12,6 @@ import scopt.OptionParser
   * WordCount
   */
 
-class WordCount{
-
-}
 
 object WordCount {
 
@@ -52,12 +49,13 @@ object WordCount {
 
     def run(params: Params): Unit = {
       val conf = new SparkConf().setAppName(this.getClass.getSimpleName +params.time).setMaster("local")
+      println(this.getClass.getSimpleName)
       val sc = new SparkContext(conf)
       val output = params.output + "/" + params.time
       val slice = sc.textFile(params.input).flatMap(_.split(" ")).map{word => (word, 1)}.reduceByKey(_ + _).map(pair => (pair._2, pair._1)).sortByKey(false, 1).map(pair => (pair._2, pair._1))
 
       slice.foreach(println)
-      slice.saveAsTextFile(output)
+//      slice.saveAsTextFile(output)
       sc.stop()
     }
 
